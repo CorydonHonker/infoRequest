@@ -1,1 +1,3 @@
 # Minecraft-Sever-Stuff
+
+made for my home hosted 1.11.2 server, never finnished, if I ever get tired of anything else or get a computer to run the server I'll continue...
