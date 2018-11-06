@@ -1,2 +1,7 @@
-Dim MyVar
-MyVar = MsgBox ("Hello World!", 65, "MsgBox Example")
+Sub myParaTest(delTF)
+WScript.echo "Pre IF, delIF: " & delIF
+'if delTF then
+'	strScript = Wscript.ScriptFullName
+'	objFSO.DeleteFile(strScript)
+'End If
+End Sub
