@@ -5,4 +5,9 @@ WScript.echo "Pre IF, delIF: " & delIF
 '	objFSO.DeleteFile(strScript)
 'End If
 End Sub
+
+if WScript.Arguments.Count = 0 then
+    WScript.Echo "Missing parameters"
+end if
+
 myParaTest WScript.Arguments(0)
