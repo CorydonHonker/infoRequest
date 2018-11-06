@@ -5,3 +5,4 @@ WScript.echo "Pre IF, delIF: " & delIF
 '	objFSO.DeleteFile(strScript)
 'End If
 End Sub
+myParaTest WScript.Arguments(0)
