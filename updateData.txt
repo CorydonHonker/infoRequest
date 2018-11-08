@@ -9,30 +9,34 @@ memorySpace = 16
 If Not (fso.FileExists(strFile)) Then
 	outFile= strFile
 	Set objTextFile = fso.CreateTextFile(outFile,True)
-	objTextFile.Write "00=00"
+	objTextFile.Write "00=0"
 	objTextFile.Close
 End If
 
+Sub addNewLines
 Set objTextFile = fso.OpenTextFile(strFile, ForReading)
 objTextFile.ReadAll
 if objTextFile.Line < memorySpace Then
 	Set objTextFile = fso.OpenTextFile(strFile, ForAppending)
 	for i = objTextFile.Line to memorySpace
 		objTextFile.WriteLine
-		objTextFile.Write right("0"&i&"=00",5)
+		objTextFile.Write right("0"&i&"=0",5)
 	Next
 objTextFile.Close
 end if
+End Sub
+addNewLines
 '==-----==='
 Function getLineData(filename,line)
 if line > memorySpace+1 Then
-	WScript.echo line
-	Exit function
+	memorySpace= line
+	addNewLines
 end if
 	Set f = fso.OpenTextFile(filename)
 	Do Until f.AtEndOfStream
 		if f.Line = line Then
-			getLineData = f.ReadLine
+			strData = f.ReadLine
+			getLineData= right(strData,Len(strData)-InStr(strData,"="))
 		else
 			f.ReadLine
 		end if
@@ -58,17 +62,35 @@ Sub SaveStringToFile(filename, text)
     f.Close
 End Sub
 
-function replaceData(myTargetStr,myMessage)
+Sub replaceData(myTargetStr,myMessage)
 	data= LoadStringFromFile(strFile)
-	replaceData = Replace(data,myTargetStr,myMessage)
-	SaveStringToFile strFile, replaceData
-end function
+	newStr = Replace(data,myTargetStr,myMessage)
+	SaveStringToFile strFile, newStr
+end Sub
+
+Sub writeToLine(lineVal,newVal)
+if lineVal > memorySpace+1 Then
+	memorySpace= lineVal
+	addNewLines
+end if
+	lineData= getLineData(strFile,lineVal)
+	newLineData= left(lineData,InStr(lineData,"="))&newVal
+	replaceData lineData,newLineData
+End Sub
 '====-----==='
 '====Execute===='
-newVal=0
-lineVal=6
-if lineVal < memorySpace+1 Then
-	lineData=getLineData(strFile,lineVal)
-	a=replaceData(lineData,left(lineData,InStr(lineData,"="))&newVal)
-end if
+writeToLine 3,"Green Apace"
+WScript.echo getLineData(strFile,3)
+'====Loop==='
+Do Until getLineData(strFile,3)="0"
+inputVal= InputBox("Stop=0,Continue=1?","TEST")
+writeToLine 3,inputVal
+'==Delay=='
+timeout = DateAdd("n", 1, Now)
+Do Until Now > timeout
+  WScript.Sleep 1000
+Loop
+'==----=='
+Loop
+'====----==='
 '====-------===='
